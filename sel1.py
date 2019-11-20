@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 import subprocess, math, os, sys, re
+import config
 
 class Listing:
     def __init__(self, num, title, obj):
@@ -89,10 +90,10 @@ def main_menu():
     print('logging chime into sirus website')
     user = driver.find_element_by_name('username')
     user.clear()
-    user.send_keys('chime@hubert-humphrey.com')
+    user.send_keys(config.user)
     password = driver.find_element_by_name('password')
     password.clear()
-    password.send_keys('#Aa9761212')
+    password.send_keys(config.password)
     login_button = driver.find_element_by_class_name('login-button')
     login_button.click()
 
