@@ -112,7 +112,7 @@ def main_menu():
         print('waiting for channel information')
 
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CLASS_NAME, "center-column")))
-        time.sleep(10)
+        time.sleep(20)
 
         listings = driver.find_elements_by_class_name('center-column')
         display_listings = []
