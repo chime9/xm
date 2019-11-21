@@ -141,8 +141,6 @@ def main_menu():
 
 
         if (chosen_channel is not None):
-            print(chosen_channel)
-        # if chosen_channel is not None:
             subprocess.call(['pulseaudio','-D','--exit-idle-time=-1'])
             subprocess.call(['pacmd','load-module','module-virtual-sink','sink_name=v1'])
             subprocess.call(['pacmd','set-default-sink','v1'])
