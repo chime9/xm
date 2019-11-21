@@ -78,6 +78,13 @@ def main_menu():
     if len(sys.argv) < 2:
         print('a filename was not supplied')
         sys.exit(1)
+    channel = None
+    if len(sys.argv) == 3:
+        try:
+            channel = int(sys.argv[2])
+        except ValueError as e:
+            print('channel must be a number ')
+            sys.exit(1)
     options = FirefoxOptions()
     options.add_argument("--headless")
     driver = webdriver.Firefox(options=options)
@@ -112,9 +119,8 @@ def main_menu():
         print('waiting for channel information')
 
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CLASS_NAME, "center-column")))
-        for i in range(20)
-            print('.', end =" ")
-            time.sleep(1)
+        time.sleep(20)
+        
 
         listings = driver.find_elements_by_class_name('center-column')
         display_listings = []
@@ -125,9 +131,18 @@ def main_menu():
             if res:
                 display_listings.append( Listing(int(res[0]),listing_obj, listing) )
 
+        chosen_channel = None
+        if (channel is not None):
+            for each in display_listings:
+                if (each.num == channel):
+                    chosen_channel = each
+        else:
+            chosen_channel = print_out_menu_options(display_listings)
 
-        chosen_channel = print_out_menu_options(display_listings)
-        if chosen_channel is not None:
+
+        if (chosen_channel is not None):
+            print(chosen_channel)
+        # if chosen_channel is not None:
             subprocess.call(['pulseaudio','-D','--exit-idle-time=-1'])
             subprocess.call(['pacmd','load-module','module-virtual-sink','sink_name=v1'])
             subprocess.call(['pacmd','set-default-sink','v1'])
@@ -136,6 +151,8 @@ def main_menu():
             print('starting to record {}'.format(sys.argv[1]))
             subprocess.call(['ffmpeg','-loglevel','error','-f','pulse','-i','default', '/sound/{}'.format(sys.argv[1])])
             print('recording of {} stopped'.format(sys.argv[1]))
+        else:
+            print('channel not found')
         
 
 

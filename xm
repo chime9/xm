@@ -11,9 +11,9 @@ def startup(input_file, channel):
     if len(path) == 0:
         path = os.getcwd()
     if (channel):
-        subprocess.call(['docker','run','-it','--rm','-v','/dev/snd:/dev/snd','-v','{}:/sound'.format(path),'-v','/home/chime/.xm/:/temp/','--privileged','audio2','/temp/sel1.py',file_name, channel])
+        subprocess.call(['docker','run','-it','--rm','-v','/dev/snd:/dev/snd','-v','{}:/sound'.format(path),'-v','/home/marc/Desktop/sound_docker/:/temp/','--privileged','audio2','/temp/sel1.py',file_name, channel])
     else:
-        subprocess.call(['docker','run','-it','--rm','-v','/dev/snd:/dev/snd','-v','{}:/sound'.format(path),'-v','/home/chime/.xm/:/temp/','--privileged','audio2','/temp/sel1.py',file_name])
+        subprocess.call(['docker','run','-it','--rm','-v','/dev/snd:/dev/snd','-v','{}:/sound'.format(path),'-v','/home/marc/Desktop/sound_docker/:/temp/','--privileged','audio2','/temp/sel1.py',file_name])
 
 startup()
 
