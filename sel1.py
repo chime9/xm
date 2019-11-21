@@ -18,6 +18,16 @@ class Listing:
     def __str__(self):
         return "{} {}".format(self.num, self.title)
 
+def record(chosen_ch, f):
+    subprocess.call(['pulseaudio','-D','--exit-idle-time=-1'])
+    subprocess.call(['pacmd','load-module','module-virtual-sink','sink_name=v1'])
+    subprocess.call(['pacmd','set-default-sink','v1'])
+    subprocess.call(['pacmd','set-default-source','v1.monitor'])
+    chosen_ch.obj.click()
+    print('starting to record {}'.format(f))
+    subprocess.call(['ffmpeg','-loglevel','error','-f','pulse','-i','default', '/sound/{}'.format(f)])
+    print('recording of {} stopped'.format(f))
+
 def print_out_menu_options(options):
     channel_number_set = set()
     for option in options:
@@ -141,17 +151,22 @@ def main_menu():
 
 
         if (chosen_channel is not None):
-            subprocess.call(['pulseaudio','-D','--exit-idle-time=-1'])
-            subprocess.call(['pacmd','load-module','module-virtual-sink','sink_name=v1'])
-            subprocess.call(['pacmd','set-default-sink','v1'])
-            subprocess.call(['pacmd','set-default-source','v1.monitor'])
-            chosen_channel.obj.click()
-            print('starting to record {}'.format(sys.argv[1]))
-            subprocess.call(['ffmpeg','-loglevel','error','-f','pulse','-i','default', '/sound/{}'.format(sys.argv[1])])
-            print('recording of {} stopped'.format(sys.argv[1]))
+            record(chosen_channel, sys.argv[1])
         else:
             print('channel not found')
-        
+            again =  input('try again? ')
+            if again.lower() == 'y':
+                while True:
+                    channel = input('channel number: ')
+                    try:
+                        channel = int(channel)
+                        for each in display_listings:
+                            if (each.num == channel):
+                                record(each, sys.argv[1])
+                                sys.exit(0)
+                        print("{} isn't found".format(channel))
+                    except  ValueError:
+                        print("{} isn't a number".format(channel))
 
 
 width = int(subprocess.check_output(['tput', 'cols']))
